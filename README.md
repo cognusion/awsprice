@@ -213,3 +213,30 @@ r3.large (Linux) US East (N. Virginia) RAM: 15.25 GiB VCPU: 2
 		Monthly (amortized) $63.452055
 		
 ```
+
+Compare the price differences, between US East (N. Virginia) and EU (Frankfurt), for an r3.xlarge, with a couple reservation types
+```bash
+$ awsprice --timeunit Monthly --instancetype r3.xlarge --1partial --1all --location "US East (N. Virginia),EU (Frankfurt)"
+Offer file: 2016-01-26T00:17:08Z
+r3.xlarge (Linux) US East (N. Virginia) RAM: 30.5 GiB VCPU: 4
+	OnDemand $239.760000
+	1year Partial Upfront: (45.840361%)
+		Upfront $1028.000000
+		Monthly $45.360000
+		Monthly (amortized) $129.853151
+	1year All Upfront: (47.036077%)
+		Upfront $1545.000000
+		Monthly $0.000000
+		Monthly (amortized) $126.986301
+r3.xlarge (Linux) EU (Frankfurt) RAM: 30.5 GiB VCPU: 4
+	OnDemand $288.000000
+	1year Partial Upfront: (37.034247%)
+		Upfront $1488.000000
+		Monthly $59.040000
+		Monthly (amortized) $181.341370
+	1year All Upfront: (38.413242%)
+		Upfront $2158.000000
+		Monthly $0.000000
+		Monthly (amortized) $177.369863
+		
+```
