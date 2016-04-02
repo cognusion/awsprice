@@ -115,27 +115,30 @@ func NewSku(name string, j Json) (s Sku) {
 func main() {
 
 	var (
-		filePath         string
-		offerCode        string
-		location         string
-		locations        []string
-		productFamily    string
-		instanceFamily   string
-		instanceType     string
-		instanceTypes    []string
-		operatingSystem  string
-		operatingSystems []string
-		tenancy          string
-		tenancies        []string
-		timeunit         string
-		timeMultiplier   float64
-		ondemand         bool
-		onepartial       bool
-		onenone          bool
-		oneall           bool
-		threepartial     bool
-		threeall         bool
-		csvout           bool
+		filePath             string
+		offerCode            string
+		location             string
+		locations            []string
+		productFamily        string
+		instanceFamily       string
+		instanceType         string
+		instanceTypes        []string
+		operatingSystem      string
+		operatingSystems     []string
+		tenancy              string
+		tenancies            []string
+		timeunit             string
+		timeMultiplier       float64
+		ondemand             bool
+		onepartial           bool
+		onenone              bool
+		oneall               bool
+		threepartial         bool
+		threeall             bool
+		csvout               bool
+		listlocations        bool
+		listinstancefamilies bool
+		listproductfamilies  bool
 	)
 
 	flag.StringVar(&filePath, "file", "", "The path to the offer file (You should not need to set this)")
@@ -155,6 +158,9 @@ func main() {
 	flag.BoolVar(&threepartial, "3partial", false, "Show 3year Partial Upfront costs")
 	flag.BoolVar(&threeall, "3all", false, "Show 3year All Upfront costs")
 	flag.BoolVar(&csvout, "csvout", false, "Output in CSV format. All costs will be exported")
+	flag.BoolVar(&listlocations, "listlocations", false, "List all of the locations")
+	flag.BoolVar(&listinstancefamilies, "listinstancefamilies", false, "List all of the instance families")
+	flag.BoolVar(&listproductfamilies, "listproductfamilies", false, "List all of the product families")
 	flag.Parse()
 
 	// Splitsies
@@ -217,10 +223,47 @@ func main() {
 	TermsReserved = cast.ToStringMap(cast.ToStringMap(j["terms"])["Reserved"])
 	TermsDemand = cast.ToStringMap(cast.ToStringMap(j["terms"])["OnDemand"])
 
+	if listlocations || listinstancefamilies || listproductfamilies {
+
+		stuff := make(map[string]bool)
+
+		for _, v := range products {
+			p := cast.ToStringMap(v)
+			a := cast.ToStringMapString(p["attributes"])
+
+			if listproductfamilies {
+				pfam := cast.ToString(p["productFamily"])
+				if pfam != "" {
+					stuff[pfam] = true
+				}
+			}
+
+			if listinstancefamilies {
+				if a["instanceFamily"] != "" {
+					stuff[a["instanceFamily"]] = true
+				}
+			}
+
+			if listlocations {
+				if a["location"] != "" {
+					stuff[a["location"]] = true
+				}
+			}
+		}
+
+		for k, _ := range stuff {
+			fmt.Println(k)
+		}
+		
+		os.Exit(0)
+
+	}
+
+	// No listings, run the op
 	firstPrint := true
 	for k, v := range products {
 		p := cast.ToStringMap(v)
-		if productFamily != "" && productFamily != p["productFamily"] {
+		if productFamily != "" && productFamily != cast.ToString(p["productFamily"]) {
 			// Not it
 			continue
 		}

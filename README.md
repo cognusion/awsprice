@@ -6,9 +6,8 @@ Gotchas
 
 Only EC2 "Compute Instance" types are supported at this time.
 
-The "location" is not formatted like other AWS services (thanks, Amazon). I intend
-to have a --listlocations command at some point, as my free time allows, for now
-you'll have to guess or look at the cached JSON file if you want something else.
+The "location" is not formatted like other AWS services (thanks, Amazon). Use --listlocations
+to see all of the locations in the downloaded/cached offer file
 
 Results are not sorted, and their order means nothing.
 
@@ -22,7 +21,7 @@ Basics
 go get -u github.com/cognusion/awsprice
 
 $ awsprice --help
-Usage of ./awsprice:
+Usage of awsprice:
   -1all
     	Show 1year All Upfront costs
   -1none
@@ -42,9 +41,15 @@ Usage of ./awsprice:
   -instancefamily string
     	The instance family to filter on
   -instancetype string
-    	The instance type(s) to filter on
+    	The instance type to filter on
+  -listinstancefamilies
+    	List all of the instance families
+  -listlocations
+    	List all of the locations
+  -listproductfamilies
+    	List all of the product families
   -location string
-    	The location(s) to filter on (default "US East (N. Virginia)")
+    	The location to filter on (default "US East (N. Virginia)")
   -offercode string
     	If 'file' is empty, this is the offer file that is downloaded (default "AmazonEC2")
   -offerindex string
@@ -52,9 +57,9 @@ Usage of ./awsprice:
   -ondemand
     	Show OnDemand costs (default true)
   -os string
-    	The operating system(s) to filter on (default "Linux")
+    	The operating system to filter on (default "Linux")
   -tenancy string
-    	The tenancy type(s) to filter on (default "Shared")
+    	The tenancy type to filter on (default "Shared")
   -timeunit string
     	Hourly, Daily, Weekly, Monthly, Yearly (default "Hourly")
  
@@ -63,6 +68,23 @@ Usage of ./awsprice:
 Examples
 --------
  
+List all the locations
+```bash
+$ awsprice --listlocations
+Offer file: 2016-01-26T00:17:08Z
+Asia Pacific (Tokyo)
+AWS GovCloud (US)
+EU (Ireland)
+South America (Sao Paulo)
+US East (N. Virginia)
+Asia Pacific (Seoul)
+Asia Pacific (Singapore)
+US West (Oregon)
+Asia Pacific (Sydney)
+EU (Frankfurt)
+US West (N. California)
+```
+
 Compare the OnDemand costs only, Monthly cost calculated, for r3.large and m4.large instances
  ```bash
 $ awsprice --instancetype r3.large,m4.large --timeunit Monthly
